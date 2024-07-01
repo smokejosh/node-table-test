@@ -11,7 +11,7 @@
     <script>
         async function fetchSmartsheetData() {
             try {
-                const response = await fetch('http://localhost:3000/sheets/hxqJ4g9RmqwjR48g4J9pj558cG5GW5GqH86JvCg1', {
+                const response = await fetch('https://node-table-test.onrender.com/api/data', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@
             const refIndex = columns.findIndex(column => column.title === "Ref");
             const percentIndex = columns.findIndex(column => column.title === "%");
 
-            if (refIndex === 1 || percentIndex === 1) {
+            if (refIndex === -1 || percentIndex === -1) {
                 document.getElementById('message').innerText = 'Error: Specified columns not found';
                 return;
             }
