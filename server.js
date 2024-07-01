@@ -1,24 +1,27 @@
 const express = require('express');
 const axios = require('axios');
-
+const path = require('path');
 const app = express();
-app.use(express.json());
 
-// Endpoint to serve data to the frontend
-app.get('/api/data', async (req, res) => {
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Endpoint to fetch Smartsheet data
+app.get('/sheets/:sheetId', async (req, res) => {
     try {
-        const response = await axios.get('https://api.smartsheet.com/2.0/sheets/hxqJ4g9RmqwjR48g4J9pj558cG5GW5GqH86JvCg1' ,{
+        const response = await axios.get(`https://api.smartsheet.com/2.0/sheets/${req.params.sheetId}`, {
             headers: {
-                'Authorization': 'Bearer gQ3HdjTb6CnJdZVR3pWWU0VjhyCciSOFoN03j'
-            }
+                'Authorization': 'Bearer gQ3HdjTb6CnJdZVR3pWWU0VjhyCciSOFoN03j'}
         });
-        const data = response.data;
-        res.json(data);
+
+        res.json(response.data);
     } catch (error) {
-        console.error('Error fetching Smartsheet data:', error);
-        res.status(500).send('Internal Server Error');
+        console.error('Error fetching Smartsheet data:', error.message);
+        res.status(500).json({ error: 'Failed to fetch Smartsheet data' });
     }
 });
+
+// Define your other routes or middleware as needed
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
